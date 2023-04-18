@@ -13,7 +13,7 @@ class ServiceProvider extends IlluminateServiceProvider {
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/../config/barcode.php' => config_path('webstamp.php'),
+            __DIR__.'/../config/webstamp.php' => config_path('webstamp.php'),
         ], 'config');
     }
 }

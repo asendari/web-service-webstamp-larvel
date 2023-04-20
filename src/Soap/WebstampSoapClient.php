@@ -24,24 +24,33 @@ class WebstampSoapClient
 
     private function setIdentification()
     {
-        $identification = new stdClass();
-        $identification->language = 'fr';
-        $identification->userid = config('webstamp.user_id');
-        $identification->password = config('webstamp.password');
-        $identification->encryption_type = 'sha1';
-        $this->identification            = $identification;
-
+        $identification = [
+            'language' => 'fr',
+            'application' => config('webstamp.application_id'),
+            'userid' => config('webstamp.user_id'),
+            'password' => config('webstamp.password'),
+            'encryption_type' => '',
+        ];
+        $this->identification = $identification;
     }
 
 
     private function setClient (){
         $wsdl = __DIR__ . '/webstamp_v6.wsdl';
 
+        $environnement = config('webstamp.environement');
+        if($environnement == 'production'){
+            $url = config('webstamp.url_prod') . '/wsws/soap/v6'; 
+        }else{
+            $url = config('webstamp.url_test'). '/wsws/soap/v6';
+        }
+
         $args = [
-            'location' => config('webstamp.environement') == 'production' ? config('webstamp.url_prod'): config('webstamp.url_test'),
+            'location' => $url,
             'encoding'           => 'UTF-8',
             'connection_timeout' => 90,
             'compression'        => ( SOAP_COMPRESSION_ACCEPT | SOAP_COMPRESSION_GZIP ),
+            'trace' => 1
         ];
 
         if ( config('webstamp.debug', false) ) {
@@ -56,6 +65,7 @@ class WebstampSoapClient
     {
 
         $request = new stdClass();
+
         $request->args = $args;
         $request->args->identification = $this->identification;
 
@@ -94,6 +104,7 @@ class WebstampSoapClient
 
     public function formatError( $fault )
     {
+        Log::info($this->client->__getLastResponse());
         $msg = sprintf( "ERROR: The Barcode Server returned Error-Code '%s' with the following message: %s", $fault->faultcode, $fault->faultstring );
         return $msg;
     }

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'application_id' => env('WS_WEBSTAMP_APPLICATION_ID'),
     'url_prod' => env('WS_WEBSTAMP_URL_PROD'),
     'url_test' => env('WS_WEBSTAMP_URL_TEST'),
     'user_id' => env('WS_WEBSTAMP_USER_ID'),

@@ -33,6 +33,10 @@ class WebstampOptionsSoapClient extends WebstampSoapClient
     {
         return $this->sendSoapRequest( new stdClass() , [$this->client, 'get_media_types'] );
     }
+    public function getMedias()
+    {
+        return $this->sendSoapRequest( new stdClass() , [$this->client, 'get_medias'] );
+    }
 
     public function getZones()
     {

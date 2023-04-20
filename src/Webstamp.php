@@ -2,8 +2,8 @@
 
 namespace Asendari\WebServiceWebstamp;
 
-use Asendari\WebServiceBarcode\Models\BarcodeOrder;
-use Asendari\WebServiceBarcode\Soap\BarcodeSoapClient;
+use Asendari\WebServiceWebstamp\Models\WebstampOrder;
+use Asendari\WebServiceWebstamp\Soap\WebstampOrderSoapClient;
 use stdClass;
 
 class Webstamp
@@ -12,26 +12,22 @@ class Webstamp
 
     public function __construct()
     {
-        $this->soapClient = new BarcodeSoapClient();
+        $this->soapClient = new WebstampOrderSoapClient();
     }
 
-    public function generateLabel(BarcodeOrder $generateLabel): string
+    public function newOrder(WebstampOrder $order): string
     {
-        return $this->getLabelContent($this->soapClient->generateLabel($generateLabel));
+        return $this->getLabelContent($this->soapClient->newOrder($order));
     }
 
     public function getLabelContent(stdClass $response) : string
     {
 
         if(
-            $response->Envelope &&
-            $response->Envelope->Data &&
-            $response->Envelope->Data->Provider &&
-            $response->Envelope->Data->Provider->Sending &&
-            $response->Envelope->Data->Provider->Sending->Item &&
-            $response->Envelope->Data->Provider->Sending->Item->Label
+            $response->new_orderResult &&
+            $response->new_orderResult->print_data
         ){
-            return $response->Envelope->Data->Provider->Sending->Item->Label;
+            return $response->new_orderResult->print_data;
         }
 
         return '';

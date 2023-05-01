@@ -2,7 +2,7 @@
 
 namespace Asendari\WebServiceWebstamp\Models;
 
-class WebstampProduct extends WebstampModel
+class WebstampStamp extends WebstampModel
 {
     public $id;
     public $stamp_id;
